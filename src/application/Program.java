@@ -10,39 +10,38 @@ import model.entities.Reservation;
 public class Program {
 
 	public static void main(String[] args) throws ParseException {
-		
-		Scanner in = new Scanner(System.in);
+		//Date: 23/04/2021 16:10
+		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-		Reservation reservation = null;
+
 		System.out.print("Room number: ");
-		int number = in.nextInt();
-		System.out.print("Check-in (DD/MM/YYYY): ");
-		Date checkIn = sdf.parse(in.next());
-		System.out.print("Check-in (DD/MM/YYYY): ");
-		Date checkOut = sdf.parse(in.next());
-		
+		int number = sc.nextInt();
+		System.out.print("Check-in date (dd/MM/yyyy): ");
+		Date checkIn = sdf.parse(sc.next());
+		System.out.print("Check-out date (dd/MM/yyyy): ");
+		Date checkOut = sdf.parse(sc.next());
+
 		if (!checkOut.after(checkIn)) {
-			System.out.println("ERROR IN RESERVATION: CHECK-OUT DATE MUST BE AFTER CHECK-IN DATE.");
+			System.out.println("Error in reservation: Check-out date must be after check-in date");
 		} else {
-			reservation = new Reservation(number, checkIn, checkOut);
-			System.out.println(reservation);
+			Reservation reservation = new Reservation(number, checkIn, checkOut);
+			System.out.println("Reservation: " + reservation);
+
+			System.out.println();
+			System.out.println("Enter data to update the reservation:");
+			System.out.print("Check-in date (dd/MM/yyyy): ");
+			checkIn = sdf.parse(sc.next());
+			System.out.print("Check-out date (dd/MM/yyyy): ");
+			checkOut = sdf.parse(sc.next());
+
+			String error = reservation.updateDates(checkIn, checkOut);
+			if (error != null) {
+				System.out.println("Error in reservation: " + error);
+			} else {
+				System.out.println("Reservation: " + reservation);
+			}
 		}
-		
-		System.out.println("Enter data to update the reservation:");
-		System.out.print("Check-in (DD/MM/YYYY): ");
-		checkIn = sdf.parse(in.next());
-		System.out.print("Check-in (DD/MM/YYYY): ");
-		checkOut = sdf.parse(in.next());
-		
-		Date now = new Date();
-		if (checkIn.before(now) || checkOut.before(now)) {
-			System.out.println("ERROR IN RESERVATION: CHECK-OUT DATE MUST BE AFTER CHECK-IN DATE.");
-		} else if (!checkOut.after(now)) {
-			System.out.println("ERROR IN RESERVATION: CHECK-OUT DATE MUST BE AFTER CHECK-IN DATE.");
-		} else {
-			reservation.updateDates(checkIn, checkOut);
-			System.out.println(reservation);
-		}
+
+		sc.close();
 	}
 }
